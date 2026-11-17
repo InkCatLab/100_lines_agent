@@ -5,11 +5,8 @@ import json
 import sys
 
 
-os.environ["BASE_URL"] = "https://api.deepseek.com"
-os.environ["API_KEY"] = "sk-4759653faffa48629183433df1def26d"
-
 client = OpenAI(
-    base_url=os.getenv("BASE_URL"),
+    base_url=os.getenv("BASE_URL", "https://api.deepseek.com"),
     api_key=os.getenv("API_KEY")
 )
 

@@ -5,11 +5,8 @@ import json
 from permissions import PermissionManager
 
 
-os.environ["BASE_URL"] = "https://api.deepseek.com"
-os.environ["API_KEY"] = "sk-4759653faffa48629183433df1def26d"
-
 client = OpenAI(
-    base_url=os.getenv("BASE_URL"),
+    base_url=os.getenv("BASE_URL", "https://api.deepseek.com"),
     api_key=os.getenv("API_KEY")
 )
 
@@ -22,7 +19,7 @@ MAX_STEPS = 20
 MODEL_NAME = "deepseek-flash"
 perms = PermissionManager()
 
-def run(user_input: str, messages: list) -> None:
+def run(user_input: str, messages: list) -> str:
     messages.append({"role": "user", "content": user_input})
     for step in range(1, MAX_STEPS + 1):
         try:
@@ -55,9 +52,9 @@ def handle_call(call, perms: PermissionManager):
     try:
         args = json.loads(call.function.arguments or "{}")
     except json.JSONDecodeError:
-        result = "Error: 参数不是合法的JSON"
+        return "Error: 参数不是合法的JSON"
     except Exception as e:  # 错误信息fallback给模型修正
-        result = f"工具执行出错：{type(e).__name__}:{e}"
+        return f"工具执行出错：{type(e).__name__}:{e}"
     decision = perms.check(name, args)
     if not decision.allowed:
         return f"[权限拒绝] {decision.reason}"
