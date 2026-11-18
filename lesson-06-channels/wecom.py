@@ -1,6 +1,7 @@
 """wecom.py —— 第 6 课：WeCom 渠道（长轮询，不需要公网 IP）"""
 
 import json
+import os
 import ssl
 import time
 import uuid
@@ -11,6 +12,7 @@ class WeCom:
 
 
     def __init__(self, bot_id, secret, timeout=30) -> None:
+        # https://developer.work.weixin.qq.com/document/path/101463
         self.bot_id = bot_id
         self.secret = secret
         self.timeout = timeout
@@ -103,8 +105,8 @@ class WeCom:
 
 if __name__ == "__main__":
     bot = WeCom(
-        bot_id="aibvW9IDXH-2U_y6dzcd7MKx0_e_nEE8GZL",
-        secret="B9BCcXkXaYAo9HBbkLYgjN78PBYKflIsvTtwgyXdzMT",
+        bot_id=os.environ.get("BOT_ID"),
+        secret=os.environ.get("SECRET"),
     )
 
     try:
